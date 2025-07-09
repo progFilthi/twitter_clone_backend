@@ -20,6 +20,7 @@ import tweetRoutes from "./routes/tweets.js";
 import followRoutes from "./routes/follows.js";
 import userRoutes from "./routes/users.js";
 import likeRoutes from "./routes/likes.js";
+import timelineRoutes from "./routes/timeline.js";
 
 // 6. Health check route
 app.get("/", (req, res) => {
@@ -31,10 +32,10 @@ app.use("/tweets", tweetRoutes);
 app.use("/follow", followRoutes);
 app.use("/users", userRoutes);
 app.use("/likes", likeRoutes);
+app.use("/timeline", timelineRoutes);
 
 // 8. Start Server
-const PORT = process.env.PORT ?? 8080;
-// const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
