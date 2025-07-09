@@ -1,15 +1,23 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+// Create Tweet (or Comment if replyToId is present)
 export const createTweet = async (req, res) => {
   try {
-    const { userId, content, imageUrl } = req.body;
+    const { userId, content, imageUrl, replyToId } = req.body;
+
+    if (!userId || !content) {
+      return res.status(400).json({ error: "userId and content are required" });
+    }
 
     const tweet = await prisma.tweet.create({
       data: {
         content,
         imageUrl,
         user: { connect: { id: userId } },
+        ...(replyToId && {
+          replyTo: { connect: { id: replyToId } },
+        }),
       },
     });
 
@@ -20,11 +28,22 @@ export const createTweet = async (req, res) => {
   }
 };
 
+// Get all tweets (public)
 export const getTweets = async (req, res) => {
   try {
     const tweets = await prisma.tweet.findMany({
       orderBy: { createdAt: "desc" },
-      include: { user: true, likes: true },
+      where: { replyToId: null }, // top-level tweets only
+      include: {
+        user: true,
+        likes: true,
+        replies: {
+          include: {
+            user: true,
+            likes: true,
+          },
+        },
+      },
     });
 
     res.json(tweets);
