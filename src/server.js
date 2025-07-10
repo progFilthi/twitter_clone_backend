@@ -4,6 +4,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import ratelimiter from "./middleware/ratelimiter.js";
 
 // 2. Load environment variables from .env file
 dotenv.config();
@@ -12,6 +13,7 @@ dotenv.config();
 const app = express();
 
 // 4. Middleware
+app.use(ratelimiter);
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json());
 

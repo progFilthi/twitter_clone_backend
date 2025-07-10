@@ -12,3 +12,6 @@ router.get("/", getAllUsers);
 router.get("/:id", getUser);
 
 export default router;
+
+
+//JWT 
